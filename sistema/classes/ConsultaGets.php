@@ -180,9 +180,9 @@ class Consulta {
                             cf.aguadisp, cf.aguacrit, cf.percmolhamento, cf.volagua, cf.espacemissor, cf.espacelinhalat, 
                             cf.emissorplanta, cf.vazaoemissor, cf.eficaplica, cf.modoirrigacao, cf.taxaaplicacao, 
                             cf.idcultura, cf.spaceplant, c.cultura, f.fases",
-            "where" => $filtro,
             "join" => "join cultura c on c.idcultura = cf.idcultura"
-                    . "join fases f on f.idfase = cf.fase_id",
+                    . " join fases f on f.idfase = cf.fase_id",
+            "where" => $filtro,
             "debug" => "no"
         );
         

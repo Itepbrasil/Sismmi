@@ -37,22 +37,32 @@ $Consulta = new Consulta();
     <script type="text/javascript">
         
             $(document).ready(function(){
-                
-                $(".lsmunicipio").click(function(){
+                $('#voltar').hide();
+                $(".lsconfiguracoes").click(function(){
                     $('#latitude').val('');
                     var lat = $(this).attr('id');
                     var nomemunic = $(this).text();
                     
-                    $('#municipiosel').html(nomemunic);
-                    $('[name="nomemunicipio"]').val(nomemunic);
-                    $('[name="municipiosel"]').val(nomemunic);
-                    $('#latitude').val(lat);
+                    $('#configuracaosel').html(nomemunic);
+                    $('#novaconfiguracao').hide();
+                    $('#voltar').show();
+                    
+                    //$('[name="nomemunicipio"]').val(nomemunic);
+                    //$('[name="municipiosel"]').val(nomemunic);
+                    //$('#latitude').val(lat);
                     
                     //alert('a' + lat);
                 });
                 
                
-                
+                $("#voltar").click(function(){
+
+                    var pag = $(this).attr('pag');
+                    
+                    $('#form_configuracoes').attr({'action':pag});
+                                       
+                    $('#form_configuracoes').submit();
+                });
                 
                 
             }); // fim do ready  
@@ -63,37 +73,39 @@ $Consulta = new Consulta();
   <body>
 
     <div class="container">
-            <form id="form_municipio" class="form-signin" role="form" action="municipio.php"   method="POST" >
+            <form id="form_configuracoes" class="form-signin" role="form" action="municipio.php"   method="POST" >
                 <div class="btn-group" style=' width: 100%;text-align: center'  >
                     <button  type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width: 99%">
-                         Selecione um Município
+                        Configuração Existente
                          <span class="caret"></span>
                        </button>
-                       <ul class="dropdown-menu" id="municipio" style="text-align: left; width: 99%">
+                       <ul class="dropdown-menu" id="municipio" style="text-align: left; margin-left: 2px; padding-left: 2px; width: 99%">
                             <?php
-                             $resul = $Consulta->getBuscaConfiguracoes();
-
-                             for ($i=0;$i<=count($resul);$i++){
+                             $resul = $Consulta->getBuscaConfiguracoes($_SESSION["iduseid"]);
+                             for ($i=0;$i<count($resul);$i++){
                                 $idsisconfiguracoes = $resul[$i]['idsisconfiguracoes'];
                                 $primeirodia = $resul[$i]['primeirodia'];
+                                $primeirodia = implode("/", array_reverse(explode("-",$primeirodia)));
                                 $municipio = $resul[$i]['municipio'];
                                 $cultura = $resul[$i]['cultura'];
                                 $fases = $resul[$i]['fases'];
                                 
                        ?>
-                           <li ><a href="#" class="lsconfiguracoes" id="<?=$idsisconfiguracoes;?>"><?=$idsisconfiguracoes.'-'.$primeirodia.'-'.$cultura.'-'.$fases.'-'.$municipio ;?></a></li>
+                                <li  style="font-size: 10px"><a href="#" class="lsconfiguracoes" id="<?=$idsisconfiguracoes;?>"><?=$primeirodia.'-'.$cultura.'-'.$fases.'-'.$municipio ;?></a></li>
                             
                         <?php } ?>
-                           <li ><a href="#" class="lsmunicipio" id="">Nova Configuração</a></li>
-                       </ul>
-                        <span id="municipiosel" style="font-size: 14px;font-weight: bold;"><?= $_POST['municipiosel'];?></span>
+                       </ul>                    
+                        <span id="configuracaosel" style="font-size: 14px;font-weight: bold;"><?= $_POST['municipiosel'];?></span>
+                        
                         <input type="hidden" name="municipiosel" value='<?= $_POST['municipiosel']; ?>'>
                         <input type="hidden" name="nomemunicipio" value='<?= $_SESSION['s_nomemunicipio'] ;?>'>
                         <input type="hidden" name="primeirodia" id="primeirodia" value=''>
                         
                 </div>
-
                 <br/><br/><br/>
+                <button class="btn btn-md btn-primary btn-block" id="novaconfiguracao" type="button">Nova Configuração</button>   
+                <button class="btn btn-md btn-primary btn-block" id="voltar" pag="configuracoes.php">Voltar</button>
+                <br/>                
                 <button class="btn btn-md btn-primary btn-block" type="submit">Próximo</button>                
             </form>
     </div> <!-- /container -->
